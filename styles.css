@@ -1,0 +1,263 @@
+@import url("https://fonts.googleapis.com/css2?family=Emblema+One&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  background-color: rgb(60, 60, 60);
+}
+
+body div {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  height: 84%;
+  width: 100%;
+}
+
+nav {
+  height: 5%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 60px;
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+  gap: 10px;
+  list-style-type: none;
+  height: 100%;
+  background-color: transparent;
+  padding: 0;
+  width: 100%;
+}
+
+nav ul li {
+  color: #fff; /* Bağlantı metin rengi */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  height: 100%;
+}
+
+nav ul li:last-child {
+  border-right: none; /* Son bağlantının sağ kenar çizgisini kaldır */
+}
+
+nav ul li button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+  font-family: Tahoma;
+}
+
+nav ul li button:hover {
+  background-color: #ff7300;
+  color: black;
+}
+
+header {
+  background-color: black;
+  height: 8%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 5px solid #ff7300;
+  box-shadow: 0px 0px 25px 0px#ff7300;
+}
+
+header div {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+header div img {
+  background: transparent;
+  height: 100%;
+  margin-left: 20px;
+}
+
+header div h1 {
+  font-family: "Emblema One", system-ui;
+  margin-top: 20px;
+  margin-left: 10px;
+  color: #ff7300;
+  font-size: 22px;
+  font-weight: 50;
+}
+
+aside {
+  background-image: linear-gradient(
+    white,
+    white,
+    white,
+    white,
+    #ffa55b,
+    #ff943d,
+    #ff7300
+  );
+  border: 5px solid black;
+  border-radius: 25px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  margin: 20px;
+  display: flex;
+  align-items: center; /* Dikeyde ortala */
+  justify-content: center; /* Yatayda ortala */
+}
+
+aside::before {
+  position: absolute;
+  width: 100%; /* Genişlik 100% olacak */
+  height: 100%;
+  right: 0;
+  top: 0;
+  opacity: 0.5;
+}
+
+main {
+  background-image: linear-gradient(
+    white,
+    white,
+    white,
+    white,
+    #ffa55b,
+    #ff943d,
+    #ff7300
+  );
+  padding: 20px;
+  border: 5px solid black;
+  border-radius: 25px;
+  padding: 20px;
+  margin: 20px;
+  display: block; /* display özelliği değiştirildi */
+}
+
+/* Stil arama sonuçları listesi için */
+.search-results {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.result-button div {
+  margin-bottom: 5px; /* Atributlar arasında 5 piksel boşluk bırak */
+}
+
+.result-button {
+  transition: height 0.3s ease; /* Butonun yüksekliğindeki değişiklikler için geçiş efekti */
+}
+
+/* main içindeki div elementlerine ait CSS */
+main div {
+  display: flex; /* veya display: inline-block; */
+  flex-direction: column;
+  clear: both; /* Float'ı temizle */
+}
+
+/* Stil açılır butonların içindeki özellik adı için */
+
+main div button {
+  background-color: #ff7300;
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  margin: 8px 0px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+  float: left;
+  height: 50px;
+  width: 50%;
+  transition: background-color 0.5s ease;
+}
+
+input[type="text"] {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: 0.3s;
+  float: left;
+}
+
+input[type="text"]:focus {
+  border-color: #5e9ad6;
+}
+
+/* Buton stilleri */
+main button {
+  background-color: #ff7300;
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  margin: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+  float: left;
+}
+
+main button:hover {
+  background-color: #ff943d;
+}
+
+/* Etiket stilleri */
+label {
+  display: block;
+  clear: both;
+}
+footer {
+  background-color: black;
+  height: 8%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 5px solid #ff7300;
+  margin: 0px;
+  color: white;
+}
+
+/* Tablo çizgileri */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: none;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: transparent;
+}
