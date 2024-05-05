@@ -3,48 +3,46 @@ const key =
 const url = "https://bgafctzodoevunwmzmwx.supabase.co";
 const database = supabase.createClient(url, key);
 
-// Fonksiyonlarımızı tanımlayalım
-
-// Kişileri adlarına veya sürücü belge numarasına göre arayın
 function searchPeople(query) {
-  // supabase nesnesi tanımlı değilse veya boşsa, işlem yapmadan önce kontrol edelim
   if (!database || query.trim() === "") {
     console.error("Supabase is not initialized or query is empty");
     return;
   }
 
-  // Supabase sorgusu yap
   database
     .from("People")
     .select("*")
-    .ilike("Name", `%${query}%`) // İsimde parçalı eşleşme yap
+    .ilike("Name", `%${query}%`)
     .then((response) => {
-      // Sonuçları işleyin ve ekrana gösterin
       if (response.data.length === 0) {
         database
           .from("People")
           .select("*")
-          .ilike("LicenseNumber", `%${query}%`) // İsimde parçalı eşleşme yap
+          .ilike("LicenseNumber", `%${query}%`)
           .then((response) => {
-            // Sonuçları işleyin ve ekrana gösterin
             if (response.data.length === 0) {
               displayNoResultsMessageForPeople();
             } else {
               displaySearchResultsForPeople(response.data);
             }
-            console.log(response);
           })
           .catch((error) => {
             console.error("Error searching people:", error);
           });
       } else {
         displaySearchResultsForPeople(response.data);
-        console.log(response);
       }
     })
     .catch((error) => {
       console.error("Error searching people:", error);
     });
+}
+
+function handleKeyPressForPeople(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    searchPeople(document.getElementById("search").value);
+  }
 }
 
 function displayNoResultsMessageForPeople() {
@@ -64,8 +62,8 @@ function displaySearchResultsForPeople(results) {
     button.textContent = `${result.PersonID} - ${result.Name}`;
     button.classList.add("result-button");
     button.setAttribute("data-index", index);
-    button.setAttribute("data-key", "Name"); // Bu satırı ekleyerek data-key attribute'unu ayarlayın
-    button.setAttribute("data-info", JSON.stringify(result)); // Objeyi JSON formatında data-info attribute'una ekle
+    button.setAttribute("data-key", "Name");
+    button.setAttribute("data-info", JSON.stringify(result));
     button.addEventListener("click", showAttributesForPeople);
     searchResultsDiv.appendChild(button);
   });
@@ -74,28 +72,26 @@ function displaySearchResultsForPeople(results) {
 var isClicked = false;
 
 function showAttributesForPeople() {
-  const resultInfo = JSON.parse(this.getAttribute("data-info")); // JSON formatında saklanan objeyi al
-  const buttonHeight = this.scrollHeight; // Butonun yüksekliğini alın
+  const resultInfo = JSON.parse(this.getAttribute("data-info"));
+  const buttonHeight = this.scrollHeight;
 
-  // Butonun genişlemesi veya daralması için yüksekliği ayarlayın
   if (isClicked === false) {
-    let attributes = '<div style="text-align: left; padding-top: 10px;">'; // Sol kenara hizalama ve üst boşluk
+    let attributes = '<div style="text-align: left; padding-top: 10px;">';
     for (const key in resultInfo) {
       if (resultInfo.hasOwnProperty(key)) {
         attributes += `<div>${key}: ${resultInfo[key]}</div>`;
       }
     }
-    attributes += "</div>"; // Div'i kapat
+    attributes += "</div>";
     this.innerHTML = attributes;
     isClicked = true;
   } else {
-    this.textContent = `${resultInfo.PersonID} - ${resultInfo.Name}`; // Butonun metnini Name olarak ayarlayın
+    this.textContent = `${resultInfo.PersonID} - ${resultInfo.Name}`;
     this.style.height = "auto";
     isClicked = false;
   }
 }
 
-// Araç kaydı numarasına göre araçları arayın
 function searchVehicle(vehicleID) {
   if (!database || vehicleID.trim() === "") {
     console.error("Supabase is not initialized or query is empty");
@@ -105,18 +101,24 @@ function searchVehicle(vehicleID) {
   database
     .from("Vehicles")
     .select("*")
-    .eq("VehicleID", vehicleID) // PlateNumber alanına göre araçları filtrele
+    .eq("VehicleID", vehicleID)
     .then((response) => {
       if (response.data.length === 0) {
         displayNoResultsMessage();
       } else {
         displaySearchResultsForVehicle(response.data);
       }
-      console.log(response);
     })
     .catch((error) => {
       console.error("Error searching vehicles:", error);
     });
+}
+
+function handleKeyPressForVehicle(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    searchVehicle(document.getElementById("plateNumber").value);
+  }
 }
 
 function displayNoResultsMessage() {
@@ -133,11 +135,11 @@ function displaySearchResultsForVehicle(results) {
     const button = document.createElement("button");
     button.style.height = "auto";
     button.style.fontSize = "15px";
-    button.textContent = `${result.Make} ${result.Model}`; // Araç markası ve modelini göster
+    button.textContent = `${result.Make} ${result.Model}`;
     button.classList.add("result-button");
     button.setAttribute("data-index", index);
-    button.setAttribute("data-key", "PlateNumber"); // Bu satırı ekleyerek data-key attribute'unu ayarlayın
-    button.setAttribute("data-info", JSON.stringify(result)); // Objeyi JSON formatında data-info attribute'una ekle
+    button.setAttribute("data-key", "PlateNumber");
+    button.setAttribute("data-info", JSON.stringify(result));
     button.addEventListener("click", showAttributesForVehicle);
     searchResultsDiv.appendChild(button);
   });
@@ -145,12 +147,11 @@ function displaySearchResultsForVehicle(results) {
 
 function showAttributesForVehicle() {
   const resultInfo = JSON.parse(this.getAttribute("data-info"));
-  const buttonHeight = this.scrollHeight;
 
   if (!resultInfo) return;
 
   if (!this.classList.contains("expanded")) {
-    let attributes = '<div style="text-align: left; padding-top: 10px;">'; // Sol kenara hizalama ve üst boşluk
+    let attributes = '<div style="text-align: left; padding-top: 10px;">';
     for (const key in resultInfo) {
       if (resultInfo.hasOwnProperty(key)) {
         attributes += `<div>${key}: ${resultInfo[key]}</div>`;
@@ -160,20 +161,60 @@ function showAttributesForVehicle() {
     this.innerHTML = attributes;
     this.classList.add("expanded");
   } else {
-    this.textContent = `${resultInfo.Make} ${resultInfo.Model}`; // Butonun metnini aracın markası ve modeli olarak ayarlayın
+    this.textContent = `${resultInfo.Make} ${resultInfo.Model}`;
     this.style.height = "auto";
     this.classList.remove("expanded");
   }
 }
 
-// Yeni bir araç ekleyin
-// Yeni bir araç ekleyin
-function addVehicle(vehicleID, make, model, color, ownerId) {
-  if (!database || vehicleID.trim() === "") {
-    console.error("Supabase is not initialized or query is empty");
-    return;
+async function registerNewUser() {
+  const id = document.getElementById("ownerId").value;
+  const name = document.getElementById("name").value;
+  const address = document.getElementById("address").value;
+  const dob = document.getElementById("dob").value;
+  const licenseNumber = document.getElementById("licenseNumber").value;
+  const expiryDate = document.getElementById("expiryDate").value;
+
+  await database
+    .from("People")
+    .insert([
+      {
+        PersonID: id,
+        Name: name,
+        Address: address,
+        DOB: dob,
+        LicenseNumber: licenseNumber,
+        ExpiryDate: expiryDate,
+      },
+    ])
+    .then((response) => {
+      alert("User registered successfully!");
+      addVehicleToDatabase();
+      document.getElementById("newUserForm").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+    })
+    .catch((error) => {
+      console.error("Error registering user:", error);
+      alert("Failed to register user.");
+    });
+}
+
+function dismiss() {
+  const newUserForm = document.getElementById("newUserForm");
+  const overlay = document.getElementById("overlay");
+
+  if (newUserForm && overlay) {
+    newUserForm.style.display = "none";
+    overlay.style.display = "none";
   }
-  // Supabase'e ekleme işlemi yap
+}
+
+async function addVehicleToDatabase() {
+  const vehicleID = document.getElementById("registrationPlate").value;
+  const make = document.getElementById("make").value;
+  const model = document.getElementById("model").value;
+  const color = document.getElementById("color").value;
+  const ownerId = document.getElementById("ownerId").value;
   database
     .from("Vehicles")
     .insert([
@@ -192,34 +233,82 @@ function addVehicle(vehicleID, make, model, color, ownerId) {
         addButton.style.backgroundColor = "red";
         addButton.textContent = "Failed to add vehicle";
         setTimeout(function () {
-          // Buraya geciktirilmiş işlemleri yazın
           addButton.textContent = "Add vehicle";
           addButton.style.backgroundColor = "#ff7300";
-        }, 2000); // 1000 milisaniye = 1 saniye
+        }, 2000);
       } else {
-        console.log("Vehicle added successfully:", response);
-        database
-          .from("Vehicles")
-          .select("*")
-          .then((result) => {
-            console.log(result);
-          });
-
-        // Düğmenin rengini yeşil yap
         const addButton = document.querySelector("body main div button");
         addButton.style.backgroundColor = "green";
         addButton.textContent = "Vehicle added successfully";
         setTimeout(function () {
-          // Buraya geciktirilmiş işlemleri yazın
-          window.location.reload(); // Sayfa yeniden yüklemeyi buraya ekleyin
-        }, 1500); // 1000 milisaniye = 1 saniye
+          window.location.reload();
+        }, 2000);
       }
-      // İşlem başarılıysa sonucu işleyin
     })
     .catch((error) => {
-      // Hata durumunda hatayı gösterin
       console.error("Error adding vehicle:", error);
-
-      // Düğmenin rengini kırmızı yap
+      const addButton = document.querySelector("body main div button");
+      addButton.style.backgroundColor = "red";
+      addButton.textContent = "Failed to add vehicle";
     });
+}
+async function addVehicle(vehicleID, make, model, color, ownerId) {
+  if (
+    !database ||
+    vehicleID.trim() === "" ||
+    make.trim() === "" ||
+    model.trim() === "" ||
+    color.trim() === "" ||
+    ownerId.trim() === ""
+  ) {
+    console.error("Supabase is not initialized or required fields are missing");
+    return;
+  }
+
+  let existingUser = await database
+    .from("People")
+    .select("*")
+    .eq("PersonID", ownerId)
+    .then((response) => {
+      return response.data.length > 0;
+    });
+
+  if (!existingUser) {
+    const newUserForm = document.createElement("div");
+    newUserForm.innerHTML = `
+      <div id="newUserForm">
+        <a>There is no person with that Owner ID. Add this person to the People table.</a>
+        <input type="text" id="name" name="name" required placeholder="Name">
+        <input type="text" id="address" name="address" required placeholder="Address">
+        <input type="text" id="dob" name="dob" required placeholder="Date of Birth (dd.mm.yyyy)">
+        <input type="text" id="licenseNumber" name="licenseNumber" required placeholder="License Number">
+        <input type="text" id="expiryDate" name="expiryDate" required placeholder="Expiry Date (dd.mm.yyyy)">
+        <div id="newUserFormButtons">
+          <button onclick="registerNewUser()">Add Person</button>
+          <button onclick="dismiss()">Dismiss</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(newUserForm);
+    const overlay = document.createElement("div");
+    overlay.setAttribute("id", "overlay");
+    overlay.style =
+      "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;";
+    document.body.appendChild(overlay);
+  } else {
+    addVehicleToDatabase();
+  }
+}
+
+function handleKeyPressForVehicleAdding(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    addVehicle(
+      document.getElementById("registrationPlate").value,
+      document.getElementById("make").value,
+      document.getElementById("model").value,
+      document.getElementById("color").value,
+      document.getElementById("ownerId").value
+    );
+  }
 }
